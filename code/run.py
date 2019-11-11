@@ -4,22 +4,36 @@ import sys
 import os
 
 
-from data_generation import data_generate
+from data_generation import data_generate, credit_card
 from fit_matrix import fit
-from visualization import plot_3d
+from visualization import plot_3d, plot_sigmoid
 import statistical_functions as statistics
 from sampling_methods import sampling
 
 
-## From run_a
 
-
-
-# Load data from previously saved file
-deg = 5
-dataset = data_generate()
-#dataset.load_data()
+#Load credit card data
+dataset = credit_card()
 dataset.load_credit_card_data()
+#Split test/training data
+dataset.split_training_test_sklearn()
+#Preprocessing, removes invalid data and normalizes.
+dataset.preprocess_data()
+
+
+
+
+#plot_sigmoid(df, lr, "gender")
+
+
+
+
+"""
+        lambdas=np.logspace(-5,7,13)
+        parameters = [{'C': 1./lambdas, "solver":["lbfgs"]}]#*len(parameters)}]
+        scoring = ['accuracy', 'roc_auc']
+        logReg = LogisticRegression()
+        gridSearch = GridSearchCV(logReg, parameters, cv=5, scoring=scoring, refit='roc_auc') """
 
 # Or you can generate directly.
 #dataset = data_generate()

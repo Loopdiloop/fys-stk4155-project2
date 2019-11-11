@@ -59,85 +59,6 @@ class data_generate():
             self.z_1d += np.random.randn(n*n) * self.noise
 
 
-    def load_credit_card_data(self):
-
-        # Reading file into data frame
-        cwd = os.getcwd()
-        filename = cwd + '/default of credit card clients.xls'
-        nanDict = {}
-        df = pd.read_excel(filename, header=1, skiprows=0, index_col=0, na_values=nanDict)
-
-        df.rename(index=str, columns={"default payment next month": "defaultPaymentNextMonth"}, inplace=True)
-
-        # Features and targets 
-        X = df.loc[:, df.columns != 'defaultPaymentNextMonth'].values
-        y = df.loc[:, df.columns == 'defaultPaymentNextMonth'].values
-
-        # Categorical variables to one-hot's
-        onehotencoder = OneHotEncoder(categories="auto")
-
-        X = ColumnTransformer([("", onehotencoder, [3]),],remainder="passthrough").fit_transform(X)
-
-        y.shape
-
-        # Train-test split
-        trainingShare = 0.5 
-        seed  = 1
-        XTrain, XTest, yTrain, yTest=train_test_split(X, y, train_size=trainingShare, test_size = 1-trainingShare, random_state=seed)
-
-        # Input Scaling
-        sc = StandardScaler()
-        XTrain = sc.fit_transform(XTrain)
-        XTest = sc.transform(XTest)
-
-        # One-hot's of the target vector
-        Y_train_onehot, Y_test_onehot = onehotencoder.fit_transform(yTrain), onehotencoder.fit_transform(yTest)
-
-        # Remove instances with zeros only for past bill statements or paid amounts
-        '''
-        df = df.drop(df[(df.BILL_AMT1 == 0) &
-                        (df.BILL_AMT2 == 0) &
-                        (df.BILL_AMT3 == 0) &
-                        (df.BILL_AMT4 == 0) &
-                        (df.BILL_AMT5 == 0) &
-                        (df.BILL_AMT6 == 0) &
-                        (df.PAY_AMT1 == 0) &
-                        (df.PAY_AMT2 == 0) &
-                        (df.PAY_AMT3 == 0) &
-                        (df.PAY_AMT4 == 0) &
-                        (df.PAY_AMT5 == 0) &
-                        (df.PAY_AMT6 == 0)].index)
-        '''
-        df = df.drop(df[(df.BILL_AMT1 == 0) &
-                        (df.BILL_AMT2 == 0) &
-                        (df.BILL_AMT3 == 0) &
-                        (df.BILL_AMT4 == 0) &
-                        (df.BILL_AMT5 == 0) &
-                        (df.BILL_AMT6 == 0)].index)
-
-        df = df.drop(df[(df.PAY_AMT1 == 0) &
-                        (df.PAY_AMT2 == 0) &
-                        (df.PAY_AMT3 == 0) &
-                        (df.PAY_AMT4 == 0) &
-                        (df.PAY_AMT5 == 0) &
-                        (df.PAY_AMT6 == 0)].index)
-
-
-
-        lambdas=np.logspace(-5,7,13)
-        parameters = [{'C': 1./lambdas, "solver":["lbfgs"]}]#*len(parameters)}]
-        scoring = ['accuracy', 'roc_auc']
-        logReg = LogisticRegression()
-        gridSearch = GridSearchCV(logReg, parameters, cv=5, scoring=scoring, refit='roc_auc')
-
-        print(type(df))
-        print(df)
-        print('X', X)
-        print(df.head())
-        print(df.as_array())
-        self.x = df
-
-    
     def normalize_dataset(self):
         """ Uses the scikit-learn preprocessing for scaling the data sets for computational stability. """
         self.normalized = True
@@ -275,3 +196,73 @@ class data_generate():
         self.shape = data["shape"]
         self.terrain = data["terrain"]
 
+
+class credit_card():
+    def __init__(self):
+        return None
+
+    def load_credit_card_data(self):
+
+        # Reading file into data frame
+        cwd = os.getcwd()
+        filename = cwd + '/default of credit card clients.xls'
+        nanDict = {}
+        df = pd.read_excel(filename, header=1, skiprows=0, index_col=0, na_values=nanDict)
+
+        df.rename(index=str, columns={"default payment next month": "defaultPaymentNextMonth"}, inplace=True)
+
+        # Features and targets 
+        X = df.loc[:, df.columns != 'defaultPaymentNextMonth'].values
+        y = df.loc[:, df.columns == 'defaultPaymentNextMonth'].values
+
+        # Categorical variables to one-hot's
+        onehotencoder = OneHotEncoder(categories="auto")
+
+        X = ColumnTransformer([("", onehotencoder, [3]),],remainder="passthrough").fit_transform(X)
+
+        y.shape
+
+        self.X = X 
+        self.y = y 
+
+        self.XTrain = X 
+        self.yTrain = y 
+        self.df = df 
+
+    def split_training_test_sklearn(self, training_fraction = 0.4, seed = 5)
+        # Train-test split
+        self.XTrain, self.XTest, self.yTrain, self.yTest=train_test_split(self.X, self.y, train_size=training_fraction, test_size = 1-training_fraction, random_state=seed)
+
+    def preprocess_data(self)
+
+        # Input Scaling
+        sc = StandardScaler()
+        self.XTrain = sc.fit_transform(self.XTrain)
+        self.XTest = sc.transform(self.XTest)
+
+        # One-hot's of the target vector
+        Y_train_onehot, Y_test_onehot = onehotencoder.fit_transform(yTrain), onehotencoder.fit_transform(yTest)
+
+        # Remove instances with zeros only for past bill statements or paid amounts
+
+        df = df.drop(df[(df.BILL_AMT1 == 0) &
+                        (df.BILL_AMT2 == 0) &
+                        (df.BILL_AMT3 == 0) &
+                        (df.BILL_AMT4 == 0) &
+                        (df.BILL_AMT5 == 0) &
+                        (df.BILL_AMT6 == 0)].index)
+
+        df = df.drop(df[(df.PAY_AMT1 == 0) &
+                        (df.PAY_AMT2 == 0) &
+                        (df.PAY_AMT3 == 0) &
+                        (df.PAY_AMT4 == 0) &
+                        (df.PAY_AMT5 == 0) &
+                        (df.PAY_AMT6 == 0)].index)
+
+        """
+        print(type(df))
+        print(df)
+        print('X', X)
+        print(df.head())
+        print(df.as_array())
+        self.x = df"""

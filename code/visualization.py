@@ -5,6 +5,8 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 import sys
 
+from scipy.special import expit
+
 
 def plot_3d(x, y, z, an_x, an_y, an_z, plot_type):
     fig = plt.figure()
@@ -175,4 +177,13 @@ def plot_terrains(ind_var, ind_var_text, method, CV_text, x_matrices, x_labels, 
     ax2.legend()
     plt.show()
         
-        
+def plot_sigmoid(df, lr, x_string):
+
+    """
+    sigmoid_function = expit(df['x'] * lr.coef_[0][0] + lr.intercept_[0]).ravel()
+    plt.plot(df['x'], sigmoid_function)
+    plt.scatter(df['x'], df['y'], c=df['y'], cmap='rainbow', edgecolors='b')
+    """
+    sigmoid_function = expit(df[x_string] * lr.coef_[0][0] + lr.intercept_[0]).ravel()
+    plt.plot(df[x_string], sigmoid_function)
+    plt.scatter(df[x_string], df['y'], c=df['y'], cmap='rainbow', edgecolors='b')

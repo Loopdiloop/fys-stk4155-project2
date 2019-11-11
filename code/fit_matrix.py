@@ -64,6 +64,43 @@ class fit():
         self.X = X
         return X
 
+    def create_design_matrix_logistic(self, x=0, y=0, z=0, N=0, deg=17):
+        """  MAKE
+        Function for creating a design X-matrix with rows [1, x, y, x^2, xy, xy^2 , etc.]
+        Input is x and y mesh or raveled mesh, keyword argument deg is the degree of the polynomial you want to fit. """
+        
+        if type(x) == int:
+            x = self.inst.x_1d
+            y = self.inst.y_1d
+            z = self.inst.z_1d
+            N = self.inst.N
+
+        self.x = x
+        self.y = y
+        self.z = z
+
+        self.l = int((deg + 1)*(deg + 2) / 2)		# Number of elements in beta
+        X = np.ones((N, self.l))
+
+        for i in range(1, deg + 1):
+            q = int( i * (i + 1) / 2)
+            for k in range(i + 1):
+                X[:, q + k] = x**(i - k) + y**k
+                    
+        #Design matrix
+        self.X = X
+        return X
+
+    def fit_design_matrix_logistical_sklearn(self):
+        """Fitting matrix from sklearn logistical fitting. """
+        X = self.X
+        z = self.z
+        
+        beta = np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)
+        
+        y_tilde = X @ beta
+        return y_tilde, beta
+
     
     def fit_design_matrix_numpy(self):
         """Method that uses the design matrix to find the coefficients beta, and
