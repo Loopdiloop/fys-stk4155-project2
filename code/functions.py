@@ -34,3 +34,7 @@ def reduce4(A):
         B[i,:] = A[row, AtoB_columns] 
     
     return B
+
+def sigmoid(y):
+    """ The sigmoid function. """
+    return 1./(1+np.exp(-y))
