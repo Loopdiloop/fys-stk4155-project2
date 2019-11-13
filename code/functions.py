@@ -37,4 +37,11 @@ def reduce4(A):
 
 def sigmoid(y):
     """ The sigmoid function. """
-    return 1./(1+np.exp(-y))
+    #return 1./(1+np.exp(-y))
+    return np.exp(y)/(1+np.exp(y))
+    """
+def cost_function_sigmoid(x, y, beta):
+    d_betas = np.zeros(2)
+    for i in range(len(y)):
+        d_betas[i] -= (y[n] - sigmoid(beta[0]+beta[1]*x[i])
+    """

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import random
 import os
 import sys
@@ -16,9 +17,125 @@ from sklearn.model_selection import GridSearchCV
 
 from functions import franke_function
 
-# Trying to set the seed
-np.random.seed(0)
-random.seed(0)
+
+
+class credit_card():
+    def __init__(self):
+        return None
+
+    def load_credit_card_data(self):
+        """ Reading the input credit card data. 
+        X is input param and y is output result (wether they defaulted = 1 or not = 0).
+        X is matrix. There are 23 input parameters and ~30 000 users logged. """
+
+        # Reading file into data frame
+        cwd = os.getcwd()
+        filename = cwd + '/default_of_credit_card_clients.xls'
+        nanDict = {}
+        df = pd.read_excel(filename, header=1, skiprows=0, index_col=0, na_values=nanDict)
+        df = df.astype(np.float64)
+
+        df.rename(index=str, columns={"default payment next month": "defaultPaymentNextMonth"}, inplace=True)
+        #df["defaultPaymentNextMonth"] += 0.000001*np.random.randn()
+
+        # Features and targets 
+        X = np.array(df.loc[:, df.columns != 'defaultPaymentNextMonth'].values)
+        y = np.array(df.loc[:, df.columns == 'defaultPaymentNextMonth'].values)
+        
+        
+
+        # Categorical variables to one-hot's
+        onehotencoder = OneHotEncoder(categories="auto")
+
+        X = np.array(ColumnTransformer([("", onehotencoder, [3]),],remainder="passthrough").fit_transform(X))
+
+        y.shape
+
+        self.X = X 
+        self.y = y 
+
+        self.XTrain = X
+        self.yTrain = y 
+        self.df = df
+
+    def split_training_test_sklearn(self, training_fraction = 0.4, seed = 5):
+        # Train-test split
+        self.XTrain, self.XTest, self.yTrain, self.yTest=train_test_split(self.X, self.y, train_size=training_fraction, test_size = 1-training_fraction, random_state=seed)
+        
+        #self.yTrain_array = self.yTrain.as_matrix()
+        #self.yTest_array = self.yTest.as_matrix()
+
+    def preprocess_data(self):
+        df = self.df 
+        #funcname(self, parameter_list):
+        #    pass
+        # Input Scaling
+        sc = StandardScaler()
+        self.XTrain = np.array(sc.fit_transform(self.XTrain))
+        self.XTest = sc.transform(self.XTest)
+
+        # One-hot's of the target vector
+        onehotencoder = OneHotEncoder(categories="auto")
+        self.Y_train_onehot, self.Y_test_onehot = onehotencoder.fit_transform(self.yTrain), onehotencoder.fit_transform(self.yTest)
+
+        # Remove instances with zeros only for past bill statements or paid amounts
+
+        df = df.drop(df[(df.BILL_AMT1 == 0) &
+                        (df.BILL_AMT2 == 0) &
+                        (df.BILL_AMT3 == 0) &
+                        (df.BILL_AMT4 == 0) &
+                        (df.BILL_AMT5 == 0) &
+                        (df.BILL_AMT6 == 0)].index)
+
+        df = df.drop(df[(df.PAY_AMT1 == 0) &
+                        (df.PAY_AMT2 == 0) &
+                        (df.PAY_AMT3 == 0) &
+                        (df.PAY_AMT4 == 0) &
+                        (df.PAY_AMT5 == 0) &
+                        (df.PAY_AMT6 == 0)].index)
+
+        self.df = df 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class data_generate():
@@ -196,73 +313,3 @@ class data_generate():
         self.shape = data["shape"]
         self.terrain = data["terrain"]
 
-
-class credit_card():
-    def __init__(self):
-        return None
-
-    def load_credit_card_data(self):
-
-        # Reading file into data frame
-        cwd = os.getcwd()
-        filename = cwd + '/default of credit card clients.xls'
-        nanDict = {}
-        df = pd.read_excel(filename, header=1, skiprows=0, index_col=0, na_values=nanDict)
-
-        df.rename(index=str, columns={"default payment next month": "defaultPaymentNextMonth"}, inplace=True)
-
-        # Features and targets 
-        X = df.loc[:, df.columns != 'defaultPaymentNextMonth'].values
-        y = df.loc[:, df.columns == 'defaultPaymentNextMonth'].values
-
-        # Categorical variables to one-hot's
-        onehotencoder = OneHotEncoder(categories="auto")
-
-        X = ColumnTransformer([("", onehotencoder, [3]),],remainder="passthrough").fit_transform(X)
-
-        y.shape
-
-        self.X = X 
-        self.y = y 
-
-        self.XTrain = X 
-        self.yTrain = y 
-        self.df = df 
-
-    def split_training_test_sklearn(self, training_fraction = 0.4, seed = 5)
-        # Train-test split
-        self.XTrain, self.XTest, self.yTrain, self.yTest=train_test_split(self.X, self.y, train_size=training_fraction, test_size = 1-training_fraction, random_state=seed)
-
-    def preprocess_data(self)
-
-        # Input Scaling
-        sc = StandardScaler()
-        self.XTrain = sc.fit_transform(self.XTrain)
-        self.XTest = sc.transform(self.XTest)
-
-        # One-hot's of the target vector
-        Y_train_onehot, Y_test_onehot = onehotencoder.fit_transform(yTrain), onehotencoder.fit_transform(yTest)
-
-        # Remove instances with zeros only for past bill statements or paid amounts
-
-        df = df.drop(df[(df.BILL_AMT1 == 0) &
-                        (df.BILL_AMT2 == 0) &
-                        (df.BILL_AMT3 == 0) &
-                        (df.BILL_AMT4 == 0) &
-                        (df.BILL_AMT5 == 0) &
-                        (df.BILL_AMT6 == 0)].index)
-
-        df = df.drop(df[(df.PAY_AMT1 == 0) &
-                        (df.PAY_AMT2 == 0) &
-                        (df.PAY_AMT3 == 0) &
-                        (df.PAY_AMT4 == 0) &
-                        (df.PAY_AMT5 == 0) &
-                        (df.PAY_AMT6 == 0)].index)
-
-        """
-        print(type(df))
-        print(df)
-        print('X', X)
-        print(df.head())
-        print(df.as_array())
-        self.x = df"""

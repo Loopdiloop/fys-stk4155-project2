@@ -6,6 +6,63 @@ import numpy as np
 import sys
 
 from scipy.special import expit
+import seaborn as sns
+
+
+
+
+def plot_sigmoid(df, lr, x_string):
+
+    """
+    sigmoid_function = expit(df['x'] * lr.coef_[0][0] + lr.intercept_[0]).ravel()
+    plt.plot(df['x'], sigmoid_function)
+    plt.scatter(df['x'], df['y'], c=df['y'], cmap='rainbow', edgecolors='b')
+    """
+    sigmoid_function = expit(df[x_string] * lr.coef_[0][0] + lr.intercept_[0]).ravel()
+    plt.plot(df[x_string], sigmoid_function)
+    plt.scatter(df[x_string], df['y'], c=df['y'], cmap='rainbow', edgecolors='b')
+
+
+def plot_traits(df, show = False, save = False):
+    #df["defaultPaymentNextMonth"] += 0.00001*np.random.rand(28497)
+    if show != False or save != False:
+        sns.pairplot(df)#, hue="defaultPaymentNextMonth")#, height=2.0)
+        #sns.lmplot(x="EDUCATION", y="LIMIT_BAL", hue="defaultPaymentNextMonth", data=df) #, height=2.0)
+        if show == True:
+            plt.show()
+        if save == True:
+            plt.savefig("df_seaborn_plots.png")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def plot_3d(x, y, z, an_x, an_y, an_z, plot_type):
@@ -177,13 +234,3 @@ def plot_terrains(ind_var, ind_var_text, method, CV_text, x_matrices, x_labels, 
     ax2.legend()
     plt.show()
         
-def plot_sigmoid(df, lr, x_string):
-
-    """
-    sigmoid_function = expit(df['x'] * lr.coef_[0][0] + lr.intercept_[0]).ravel()
-    plt.plot(df['x'], sigmoid_function)
-    plt.scatter(df['x'], df['y'], c=df['y'], cmap='rainbow', edgecolors='b')
-    """
-    sigmoid_function = expit(df[x_string] * lr.coef_[0][0] + lr.intercept_[0]).ravel()
-    plt.plot(df[x_string], sigmoid_function)
-    plt.scatter(df[x_string], df['y'], c=df['y'], cmap='rainbow', edgecolors='b')
