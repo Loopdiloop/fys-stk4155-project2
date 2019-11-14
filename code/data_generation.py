@@ -58,9 +58,9 @@ class credit_card():
         self.yTrain = y 
         self.df = df
 
-    def split_training_test_sklearn(self, training_fraction = 0.4, seed = 5):
+    def split_training_test_sklearn(self, training_fraction = 0.8):
         # Train-test split
-        self.XTrain, self.XTest, self.yTrain, self.yTest=train_test_split(self.X, self.y, train_size=training_fraction, test_size = 1-training_fraction, random_state=seed)
+        self.XTrain, self.XTest, self.yTrain, self.yTest=train_test_split(self.X, self.y, train_size=training_fraction, test_size = 1-training_fraction)#, random_state=seed)
         
         #self.yTrain_array = self.yTrain.as_matrix()
         #self.yTest_array = self.yTest.as_matrix()

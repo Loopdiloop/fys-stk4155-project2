@@ -27,7 +27,7 @@ class fit():
         weights_a = np.ones((p,k)) #From input to hidden
         #weights_b = np.ones((hidden_nodes, 2)) #If more hidden layers??
         weights_c = np.ones((k, 2)) #From hidden nodes to output
-
+        """
         bias_hidden = np.ones(k)
         bias_output = np.ones(2)
         print("\n \n")
@@ -43,7 +43,7 @@ class fit():
             output_error_hidden = sigmoid(hidden_layers)*dC_da
             output_error_output =
 
-        """
+        
         X = np.ones((n,p+1))
         X[:,1:] = self.inst.XTrain
         X[:,0] = 1
@@ -90,7 +90,7 @@ class fit():
             pred = sigmoid(np.dot(X, beta))
             dCost_dBeta = np.dot(-X.T, y-pred)
             beta -= delta * dCost_dBeta
-            score[i] = np.average(abs(y-pred))
+            score[i] = statistics.calc_accuracy(pred, y)
         #print("SCORE = ", score[-1])
 
         self.beta = beta

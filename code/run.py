@@ -16,7 +16,7 @@ from sampling_methods import sampling
 showplot = False
 saveplot = False
 
-iterations = 10
+iterations = 1000
 
 
 print("Loading credit card data...")
@@ -38,23 +38,26 @@ DF = DF.drop(columns=["PAY_0", "PAY_2", "PAY_3","PAY_4", "PAY_5","PAY_6"])
 #Print and plot some info about data.
 statistics.print_info_dataframe(dataset.df, DF)
 statistics.print_info_input_output(dataset.XTrain, dataset.yTrain)
-plot_traits(DF,show=showplot, save=saveplot)
+#plot_traits(DF,show=showplot, save=saveplot)
 
 
 
 model = fit(dataset)
-model.fit_logistic_regression(delta = 0.00001, iterations=iterations)
+model.fit_logistic_regression(delta = 0.0001, iterations=iterations)
 model.test_logistic_regression(data="test")
 
-#plt.plot(np.linspace(1,iterations, iterations), model.training_score)
-#plt.show()
+
+
+plt.title("Evolution of the accuracy score.")
+plt.plot(np.linspace(1,iterations, iterations), model.training_score)
+plt.show()
 
 
 print("Score, own model: ", statistics.calc_accuracy(pred = model.prediction_test, target = model.y_test_target))
 
 model.fit_logistic_regression_sklearn()#data="test")
 
-
+"""
 
 ## Neural network
 
@@ -63,10 +66,10 @@ hidden_layers = 2
 nodes_hidden = 30
 
 NN = fit(dataset)
-NN.fit_neural_network(hidden_layers=2, number_of_hidden_nodes=30)
+NN.fit_neural_network(number_of_hidden_nodes=30)
 
 
-
+"""
 
 
 
