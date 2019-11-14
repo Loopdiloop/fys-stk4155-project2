@@ -38,7 +38,7 @@ DF = DF.drop(columns=["PAY_0", "PAY_2", "PAY_3","PAY_4", "PAY_5","PAY_6"])
 #Print and plot some info about data.
 statistics.print_info_dataframe(dataset.df, DF)
 statistics.print_info_input_output(dataset.XTrain, dataset.yTrain)
-#plot_traits(DF,show=showplot, save=saveplot)
+plot_traits(DF,show=showplot, save=saveplot)
 
 
 
@@ -55,11 +55,12 @@ plt.show()
 
 print("Score, own model: ", statistics.calc_accuracy(pred = model.prediction_test, target = model.y_test_target))
 
-model.fit_logistic_regression_sklearn()#data="test")
+model.fit_logistic_regression_sklearn()
+
+
 
 """
-
-## Neural network
+## Neural network - not done yet.
 
 #input - > hidden - > output
 hidden_layers = 2
@@ -67,58 +68,5 @@ nodes_hidden = 30
 
 NN = fit(dataset)
 NN.fit_neural_network(number_of_hidden_nodes=30)
-
-
-"""
-
-
-
-
-
-
-
-#plot_sigmoid(df, lr, "gender") """
-
-
-
-
-"""
-        lambdas=np.logspace(-5,7,13)
-        parameters = [{'C': 1./lambdas, "solver":["lbfgs"]}]#*len(parameters)}]
-        scoring = ['accuracy', 'roc_auc']
-        logReg = LogisticRegression()
-        gridSearch = GridSearchCV(logReg, parameters, cv=5, scoring=scoring, refit='roc_auc') """
-
-# Or you can generate directly.
-#dataset = data_generate()
-#dataset.generate_franke(n=100, noise=0.2)
-
-"""
-# Normalize the dataset
-dataset.normalize_dataset()
-
-# Fit design matrix
-fitted_model = fit(dataset)
-
-# Ordinary least square fitting
-fitted_model.create_design_matrix(deg)
-z_model_norm, beta = fitted_model.fit_design_matrix_numpy()
-
-# Statistical evaluation
-mse, calc_r2 = statistics.calc_statistics(dataset.z_1d, z_model_norm)
-print("Mean square error: ", mse, "\n", "R2 score: ", calc_r2)
-
-# Scale back the dataset
-rescaled_dataset = dataset.rescale_back(z = z_model_norm)
-#x_model = rescaled_dataset[0]
-#y_model = rescaled_dataset[1]
-z_model = rescaled_dataset[2]
-
-# Generate analytical solution for plotting purposes
-analytical = data_generate()
-analytical.generate_franke(n, noise=0)
-
-# Plot solutions and analytical for comparison
-plot_3d(dataset.x_unscaled, dataset.y_unscaled, z_model, analytical.x_mesh, analytical.y_mesh, analytical.z_mesh, ["surface", "scatter"])
 
 """

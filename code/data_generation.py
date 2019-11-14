@@ -98,46 +98,6 @@ class credit_card():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class data_generate():
     def __init__(self):
         self.resort = int(0)

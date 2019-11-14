@@ -1,2 +1,6 @@
 code/*.xls
 code/example_read_credit_card_data.py
+*.png
+code/*.png
+code/old_run_files/*
+
